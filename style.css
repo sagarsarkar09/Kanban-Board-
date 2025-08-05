@@ -38,40 +38,86 @@ body {
 .toolbox-priority-cont {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  background: linear-gradient(90deg, #1e293b 60%, #2563eb 100%);
+  padding: 0.5rem 1.2rem;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(37,99,235,0.08);
 }
 
 .filter-label {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e0e7ef;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 8px rgba(37,99,235,0.08);
 }
 
 .color-filters {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .color {
   width: 70px;
-  padding: 6px 10px;
-  border-radius: 20px;
+  padding: 7px 0;
+  border-radius: 22px;
   text-align: center;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
   user-select: none;
-  color: white;
-  transition: transform 0.2s;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+  border: none;
+  outline: none;
+  transition: 
+    transform 0.18s,
+    box-shadow 0.18s,
+    background 0.3s;
+  position: relative;
+  letter-spacing: 0.5px;
 }
 
-.color:hover {
-  transform: scale(1.05);
+.color.lightblue {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+}
+.color.lightgreen {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+}
+.color.lightpink {
+  background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+}
+.color.black {
+  background: linear-gradient(135deg, #1f2937 0%, #4b5563 100%);
 }
 
-.lightblue { background-color: #60a5fa; }
-.lightgreen { background-color: #34d399; }
-.lightpink { background-color: #f472b6; }
-.black { background-color: #1f2937; }
+.color:hover,
+.color.active {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+  filter: brightness(1.08);
+}
+
+.color.active {
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.25), 0 4px 16px rgba(37,99,235,0.18);
+  position: relative;
+  transform: scale(1.12);
+}
+
+.color.active::after {
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  bottom: 7px;
+  right: 12px;
+  font-size: 1.1rem;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  pointer-events: none;
+}
 
 /* Action Buttons */
 .action-btn-cont {
@@ -416,12 +462,59 @@ body {
   transition: transform 0.2s;
 }
 
-.priority-color:hover {
-  transform: scale(1.05);
+/* Gradient styles for priority selection buttons */
+.priority-color.lightblue {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  box-shadow: 0 2px 8px rgba(96,165,250,0.10);
+}
+.priority-color.lightgreen {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 2px 8px rgba(52,211,153,0.10);
+}
+.priority-color.lightpink {
+  background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  box-shadow: 0 2px 8px rgba(244,114,182,0.10);
+}
+.priority-color.black {
+  background: linear-gradient(135deg, #1f2937 0%, #4b5563 100%);
+  box-shadow: 0 2px 8px rgba(31,41,55,0.10);
+}
+
+.priority-color {
+  border: none;
+  outline: none;
+  transition: 
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.3s;
+}
+
+.priority-color:hover,
+.priority-color.active {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+  filter: brightness(1.08);
 }
 
 .priority-color.active {
-  outline: 3px solid #2563eb;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.25), 0 4px 16px rgba(37,99,235,0.18);
+  position: relative;
+  transform: scale(1.12);
+}
+
+/* Optional: Add a checkmark for the active priority */
+.priority-color.active::after {
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 1.1rem;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  pointer-events: none;
 }
 
 .modal-footer {
