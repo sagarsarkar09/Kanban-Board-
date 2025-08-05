@@ -17,7 +17,7 @@ let tickets = localStorage.getItem("tickets")
 
 // Load all existing tickets
 for (let t of tickets) {
-  createTicket(t.task, t.priorityColor, t.ticketID);
+  createTicket(t.task, t.priorityColor, t.ticketID, t.createdAt);
 }
 
 // Toggle modal
@@ -48,48 +48,52 @@ modalCont.addEventListener("keydown", (e) => {
 // Filter tickets by color
 toolBoxPriorityColors.forEach((colorBox) => {
   colorBox.addEventListener("click", () => {
-    const selectedColor = colorBox.classList[0];
-    const filtered = tickets.filter((t) => t.priorityColor === selectedColor);
-    renderFilteredTickets(filtered);
+    const color = colorBox.classList[0]; // e.g., "lightblue"
+    mainCont.innerHTML = ""; // Clear all tickets before showing filtered ones
+
+    tickets
+      .filter((t) => t.priorityColor === color)
+      .forEach((t) => {
+        createTicket(t.task, t.priorityColor, t.ticketID, t.createdAt);
+      });
   });
 });
 
-function renderFilteredTickets(filtered) {
-  mainCont.innerHTML = "";
-  filtered.forEach((t) => {
-    createTicket(t.task, t.priorityColor, t.ticketID);
-  });
-}
-
-function createTicket(task, priorityColor, ticketID) {
+function createTicket(task, priorityColor, ticketID, createdAt) {
   const id = ticketID || shortid();
+  const now = createdAt || new Date().toISOString();
+  const dateObj = new Date(now);
+  const formattedDate = dateObj.toLocaleDateString();
+  const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   const ticketCont = document.createElement("div");
-  ticketCont.className = "ticket-cont";
+  ticketCont.className = `ticket-cont ${priorityColor}`;
 
   ticketCont.innerHTML = `
-    <div class="ticket-color ${priorityColor}"></div>
+    <div class="ticket-controls">
+      <button class="ticket-done" title="Mark as Done"><i class="fa-solid fa-check"></i></button>
+      <button class="ticket-lock" title="Lock/Unlock"><i class="fa-solid fa-lock"></i></button>
+    </div>
     <div class="ticket-id">#${id}</div>
+    <div class="ticket-date"><i class="fa-regular fa-clock"></i> ${formattedDate} ${formattedTime}</div>
     <div class="task-area" contenteditable="${!isLocked}">${task}</div>
-    <div class="ticket-lock">
-      <i class="fa-solid fa-lock"></i>
-    </div>
-    <div class="ticket-remove">
-      <i class="fa-solid fa-xmark"></i>
-    </div>
+    <button class="ticket-remove" title="Remove"><i class="fa-solid fa-xmark"></i></button>
   `;
 
   mainCont.appendChild(ticketCont);
 
   if (!ticketID) {
-    tickets.push({ task, priorityColor, ticketID: id });
+    tickets.push({ task, priorityColor, ticketID: id, createdAt: now });
     localStorage.setItem("tickets", JSON.stringify(tickets));
   }
 
-  const lockIcon = ticketCont.querySelector(".ticket-lock i");
+  const lockBtn = ticketCont.querySelector(".ticket-lock");
+  const lockIcon = lockBtn.querySelector("i");
   const taskElem = ticketCont.querySelector(".task-area");
   const removeBtn = ticketCont.querySelector(".ticket-remove");
+  const doneBtn = ticketCont.querySelector(".ticket-done");
 
-  lockIcon.addEventListener("click", () => {
+  lockBtn.addEventListener("click", () => {
     isLocked = !isLocked;
     taskElem.setAttribute("contenteditable", !isLocked);
     lockIcon.classList.toggle("fa-lock-open");
@@ -102,6 +106,12 @@ function createTicket(task, priorityColor, ticketID) {
       tickets = tickets.filter((t) => t.ticketID !== id);
       localStorage.setItem("tickets", JSON.stringify(tickets));
     }
+  });
+
+  doneBtn.addEventListener("click", () => {
+    ticketCont.remove();
+    tickets = tickets.filter((t) => t.ticketID !== id);
+    localStorage.setItem("tickets", JSON.stringify(tickets));
   });
 
   // Color cycling feature
@@ -120,3 +130,11 @@ function createTicket(task, priorityColor, ticketID) {
     }
   });
 }
+
+// Show all tickets when TaskFlow brand is clicked
+document.querySelector('.brand-title').addEventListener('click', () => {
+  mainCont.innerHTML = "";
+  tickets.forEach((t) => {
+    createTicket(t.task, t.priorityColor, t.ticketID, t.createdAt);
+  });
+});
