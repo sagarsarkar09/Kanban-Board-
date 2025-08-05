@@ -76,6 +76,16 @@
 
     <script src="https://unpkg.com/shortid-dist@1.0.5/dist/shortid-2.2.13.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        const addBtn = document.querySelector(".add-btn");
+        const modalCont = document.querySelector(".modal-cont");
+        let modalVisible = false;
+
+        addBtn.addEventListener("click", () => {
+            modalVisible = !modalVisible;
+            modalCont.style.display = modalVisible ? "flex" : "none";
+        });
+    </script>
 </body>
 
 </html>
